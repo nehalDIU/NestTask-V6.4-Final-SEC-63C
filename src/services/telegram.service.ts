@@ -5,7 +5,7 @@ import type { Announcement } from '../types/announcement';
 const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
 const TELEGRAM_API = TELEGRAM_BOT_TOKEN ? `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}` : '';
-const APP_DOMAIN = 'https://nesttask.vercel.app';
+const APP_DOMAIN = 'https://nesttask-63c.vercel.app';
 
 /**
  * Sends a message to Telegram with optional photo attachment
