@@ -29,8 +29,13 @@ interface TaskListProps {
 export function TaskList({ tasks, onDeleteTask, showDeleteButton = false }: TaskListProps) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  // Sort tasks to move overdue tasks to the bottom
+  // Sort tasks to move completed tasks to the bottom and handle overdue tasks
   const sortedTasks = [...tasks].sort((a, b) => {
+    // First, sort by completion status
+    if (a.status === 'completed' && b.status !== 'completed') return 1;
+    if (a.status !== 'completed' && b.status === 'completed') return -1;
+    
+    // If both tasks have same completion status, sort by overdue status
     const aOverdue = isOverdue(a.dueDate);
     const bOverdue = isOverdue(b.dueDate);
     

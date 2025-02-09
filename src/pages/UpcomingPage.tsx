@@ -4,6 +4,7 @@ import { Crown, Calendar, Clock, Tag, CheckCircle2, AlertCircle, BookOpen, FileT
 import { useTasks } from '../hooks/useTasks';
 import { useAuth } from '../hooks/useAuth';
 import { TaskDetailsPopup } from '../components/task/TaskDetailsPopup';
+import { MonthlyCalendar } from '../components/MonthlyCalendar';
 import type { Task } from '../types/task';
 
 interface UpcomingPageProps {
@@ -18,6 +19,7 @@ export function UpcomingPage() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [operationError, setOperationError] = useState<string | null>(null);
+  const [isMonthlyCalendarOpen, setIsMonthlyCalendarOpen] = useState(false);
 
   // Update local tasks when allTasks changes
   useEffect(() => {
@@ -197,7 +199,10 @@ export function UpcomingPage() {
             Today
           </button>
 
-          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+          <span 
+            className="text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+            onClick={() => setIsMonthlyCalendarOpen(true)}
+          >
             {format(selectedDate, 'MMMM yyyy')}
           </span>
 
@@ -473,11 +478,21 @@ export function UpcomingPage() {
       {selectedTask && (
         <TaskDetailsPopup
           task={selectedTask}
+          tasks={tasks}
           onClose={() => setSelectedTask(null)}
           onStatusUpdate={handleStatusUpdate}
           isUpdating={isUpdating}
         />
       )}
+
+      {/* Monthly Calendar */}
+      <MonthlyCalendar
+        isOpen={isMonthlyCalendarOpen}
+        onClose={() => setIsMonthlyCalendarOpen(false)}
+        selectedDate={selectedDate}
+        onSelectDate={setSelectedDate}
+        tasks={tasks}
+      />
     </div>
   );
 }

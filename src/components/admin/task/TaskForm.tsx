@@ -21,7 +21,7 @@ export function TaskForm({ onSubmit }: TaskFormProps) {
     category: 'task',
     dueDate: '',
     description: '',
-    status: 'my-tasks',
+    status: 'in-progress',
   });
 
   const [showLinkInput, setShowLinkInput] = useState(false);
@@ -63,7 +63,7 @@ export function TaskForm({ onSubmit }: TaskFormProps) {
         category: 'task',
         dueDate: '',
         description: '',
-        status: 'my-tasks',
+        status: 'in-progress',
       });
       setShowLinkInput(false);
       setLinkInput('');
