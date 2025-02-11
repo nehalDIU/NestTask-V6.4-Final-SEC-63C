@@ -9,6 +9,7 @@ export type TaskCategory =
   | 'documents'
   | 'blc'
   | 'groups'
+  | 'project'
   | 'others' 
   | 'all';
 

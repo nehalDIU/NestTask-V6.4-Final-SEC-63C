@@ -71,8 +71,9 @@ export function TaskEditModal({ task, onClose, onUpdate }: TaskEditModalProps) {
                   onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value as TaskCategory }))}
                   className="w-full pl-10 pr-4 py-2 border dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white appearance-none"
                 >
-                  <option value="presentation">Presentation</option>
                   <option value="assignment">Assignment</option>
+                  <option value="presentation">Presentation</option>
+                  <option value="project">Project</option>
                   <option value="quiz">Quiz</option>
                   <option value="lab-report">Lab Report</option>
                   <option value="lab-final">Lab Final</option>
