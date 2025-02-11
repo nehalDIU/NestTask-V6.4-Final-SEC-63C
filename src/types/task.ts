@@ -10,6 +10,8 @@ export type TaskCategory =
   | 'blc'
   | 'groups'
   | 'project'
+  | 'midterm'
+  | 'final-exam'
   | 'others' 
   | 'all';
 

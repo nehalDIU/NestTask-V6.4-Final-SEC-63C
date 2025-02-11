@@ -1,5 +1,22 @@
 import { useState } from 'react';
-import { BookOpen, PenSquare, Presentation, Beaker, Microscope, ListTodo, FileText, Users, Building, ChevronDown, ChevronUp, Activity } from 'lucide-react';
+import { 
+  BookOpen, 
+  PenSquare, 
+  Presentation, 
+  Beaker, 
+  Microscope, 
+  ListTodo, 
+  FileText, 
+  Users, 
+  Building, 
+  ChevronDown, 
+  ChevronUp, 
+  Activity, 
+  Folder,
+  PencilRuler,
+  GraduationCap,
+  MoreHorizontal
+} from 'lucide-react';
 import type { TaskCategory } from '../../types';
 
 interface TaskCategoriesProps {
@@ -20,6 +37,9 @@ export function TaskCategories({ onCategorySelect, selectedCategory, categoryCou
     { id: 'assignment' as TaskCategory, label: 'Assignment', icon: PenSquare, count: categoryCounts['assignment'] || 0 },
     { id: 'presentation' as TaskCategory, label: 'Presentation', icon: Presentation, count: categoryCounts['presentation'] || 0 },
     { id: 'lab-report' as TaskCategory, label: 'Lab Report', icon: Beaker, count: categoryCounts['lab-report'] || 0 },
+    { id: 'project' as TaskCategory, label: 'Project', icon: Folder, count: categoryCounts['project'] || 0 },
+    { id: 'midterm' as TaskCategory, label: 'Midterm', icon: PencilRuler, count: categoryCounts['midterm'] || 0 },
+    { id: 'final-exam' as TaskCategory, label: 'Final Exam', icon: GraduationCap, count: categoryCounts['final-exam'] || 0 },
     { id: 'lab-final' as TaskCategory, label: 'Lab Final', icon: Microscope, count: categoryCounts['lab-final'] || 0 },
     { id: 'lab-performance' as TaskCategory, label: 'Lab perform..', icon: Activity, count: categoryCounts['lab-performance'] || 0 },
     { id: 'documents' as TaskCategory, label: 'Documents', icon: FileText, count: categoryCounts['documents'] || 0 },
@@ -33,7 +53,25 @@ export function TaskCategories({ onCategorySelect, selectedCategory, categoryCou
 
   return (
     <div className="mb-8">
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Categories</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Categories</h2>
+        {hasMoreCategories && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 
+              text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 
+              bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 
+              rounded-full transition-all duration-200"
+          >
+            <span>{isExpanded ? 'Show Less' : 'Show All'}</span>
+            {isExpanded ? (
+              <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            ) : (
+              <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            )}
+          </button>
+        )}
+      </div>
       <div className="space-y-3">
         {/* Grid for categories */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
@@ -42,18 +80,19 @@ export function TaskCategories({ onCategorySelect, selectedCategory, categoryCou
               key={id || 'total'}
               onClick={() => onCategorySelect(id)}
               className={`
-                flex items-center gap-2 p-3 rounded-xl transition-all duration-200
+                group flex items-center gap-2 p-3 rounded-xl transition-all duration-200
                 ${selectedCategory === id
                   ? 'bg-blue-600 text-white shadow-lg scale-[1.02]'
                   : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }
+                hover:shadow-md hover:-translate-y-0.5
               `}
             >
               <div className={`
-                p-2 rounded-lg
+                p-2 rounded-lg transition-colors duration-200
                 ${selectedCategory === id
                   ? 'bg-blue-500/20'
-                  : 'bg-blue-50 dark:bg-blue-900/20'
+                  : 'bg-blue-50 dark:bg-blue-900/20 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30'
                 }
               `}>
                 <Icon className="w-5 h-5" />
@@ -65,26 +104,6 @@ export function TaskCategories({ onCategorySelect, selectedCategory, categoryCou
             </button>
           ))}
         </div>
-
-        {/* Show more/less button */}
-        {hasMoreCategories && (
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full flex items-center justify-center gap-2 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-colors"
-          >
-            {isExpanded ? (
-              <>
-                <ChevronUp className="w-4 h-4" />
-                Show Less Categories
-              </>
-            ) : (
-              <>
-                <ChevronDown className="w-4 h-4" />
-                Show More Categories
-              </>
-            )}
-          </button>
-        )}
       </div>
     </div>
   );

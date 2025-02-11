@@ -13,7 +13,8 @@ import {
   Building,
   Users,
   GraduationCap,
-  Tag
+  Tag,
+  Folder
 } from 'lucide-react';
 import { isOverdue } from '../utils/dateUtils';
 import { parseLinks } from '../utils/linkParser';
@@ -54,6 +55,8 @@ export function TaskList({ tasks, onDeleteTask, showDeleteButton = false }: Task
         return <PenSquare className="w-3.5 h-3.5" />;
       case 'presentation':
         return <Presentation className="w-3.5 h-3.5" />;
+      case 'project':
+        return <Folder className="w-3.5 h-3.5" />;
       case 'lab-report':
         return <Beaker className="w-3.5 h-3.5" />;
       case 'lab-final':
@@ -79,6 +82,8 @@ export function TaskList({ tasks, onDeleteTask, showDeleteButton = false }: Task
         return 'text-orange-600 dark:text-orange-400';
       case 'presentation':
         return 'text-red-600 dark:text-red-400';
+      case 'project':
+        return 'text-indigo-600 dark:text-indigo-400';
       case 'lab-report':
         return 'text-green-600 dark:text-green-400';
       case 'lab-final':

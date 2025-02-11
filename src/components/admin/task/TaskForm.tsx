@@ -133,15 +133,17 @@ export function TaskForm({ onSubmit }: TaskFormProps) {
                 className="w-full pl-10 pr-4 py-2 border dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white appearance-none"
               >
                 <option value="assignment">Assignment</option>
+                <option value="blc">BLC</option>
+                <option value="documents">Documents</option>
+                <option value="final-exam">Final Exam</option>
+                <option value="groups">Groups</option>
+                <option value="lab-final">Lab Final</option>
+                <option value="lab-performance">Lab Performance</option>
+                <option value="lab-report">Lab Report</option>
+                <option value="midterm">Midterm</option>
                 <option value="presentation">Presentation</option>
                 <option value="project">Project</option>
                 <option value="quiz">Quiz</option>
-                <option value="lab-report">Lab Report</option>
-                <option value="lab-final">Lab Final</option>
-                <option value="lab-performance">Lab Performance</option>
-                <option value="documents">Documents</option>
-                <option value="blc">BLC</option>
-                <option value="groups">Groups</option>
                 <option value="task">Task</option>
                 <option value="others">Others</option>
               </select>

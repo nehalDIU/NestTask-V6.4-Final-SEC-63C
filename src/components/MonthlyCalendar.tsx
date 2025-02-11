@@ -21,9 +21,7 @@ interface MonthlyCalendarProps {
 export function MonthlyCalendar({ isOpen, onClose, selectedDate, onSelectDate, tasks }: MonthlyCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(selectedDate);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
-  const [longPressedDate, setLongPressedDate] = useState<Date | null>(null);
   const tooltipTimeoutRef = useRef<NodeJS.Timeout>();
-  const longPressTimeoutRef = useRef<NodeJS.Timeout>();
   const calendarRef = useRef<HTMLDivElement>(null);
   const isMobileRef = useRef(false);
 
@@ -60,12 +58,14 @@ export function MonthlyCalendar({ isOpen, onClose, selectedDate, onSelectDate, t
 
   // Handle mouse enter with delay for tooltip
   const handleMouseEnter = (date: Date) => {
+    if (isMobileRef.current) return; // Don't show tooltip on mobile
+    
     if (tooltipTimeoutRef.current) {
       clearTimeout(tooltipTimeoutRef.current);
     }
     tooltipTimeoutRef.current = setTimeout(() => {
       setHoveredDate(date);
-    }, 500); // Show tooltip after 500ms hover
+    }, 500);
   };
 
   // Handle mouse leave
@@ -74,23 +74,6 @@ export function MonthlyCalendar({ isOpen, onClose, selectedDate, onSelectDate, t
       clearTimeout(tooltipTimeoutRef.current);
     }
     setHoveredDate(null);
-  };
-
-  // Handle touch start for long press
-  const handleTouchStart = (date: Date) => {
-    if (!isMobileRef.current) return;
-    
-    longPressTimeoutRef.current = setTimeout(() => {
-      setLongPressedDate(date);
-    }, 500); // 500ms for long press
-  };
-
-  // Handle touch end
-  const handleTouchEnd = () => {
-    if (longPressTimeoutRef.current) {
-      clearTimeout(longPressTimeoutRef.current);
-    }
-    setLongPressedDate(null);
   };
 
   // Handle click outside
@@ -115,9 +98,6 @@ export function MonthlyCalendar({ isOpen, onClose, selectedDate, onSelectDate, t
     return () => {
       if (tooltipTimeoutRef.current) {
         clearTimeout(tooltipTimeoutRef.current);
-      }
-      if (longPressTimeoutRef.current) {
-        clearTimeout(longPressTimeoutRef.current);
       }
     };
   }, []);
@@ -185,10 +165,8 @@ export function MonthlyCalendar({ isOpen, onClose, selectedDate, onSelectDate, t
                         onSelectDate(date);
                         onClose();
                       }}
-                      onTouchStart={() => handleTouchStart(date)}
-                      onTouchEnd={handleTouchEnd}
-                      onMouseEnter={() => handleMouseEnter(date)}
-                      onMouseLeave={handleMouseLeave}
+                      onMouseEnter={() => !isMobileRef.current && handleMouseEnter(date)}
+                      onMouseLeave={() => !isMobileRef.current && handleMouseLeave()}
                       className={`
                         relative aspect-square rounded-lg
                         flex flex-col items-center justify-center gap-1
@@ -245,44 +223,44 @@ export function MonthlyCalendar({ isOpen, onClose, selectedDate, onSelectDate, t
                         </div>
                       )}
 
-                      {/* Tooltip - Show on hover for desktop or long press for mobile */}
-                      <AnimatePresence>
-                        {((hoveredDate && isSameDay(date, hoveredDate)) || 
-                          (longPressedDate && isSameDay(date, longPressedDate))) && 
-                          summary.total > 0 && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            className="absolute bottom-full mb-2 z-50 w-48 p-2
-                              bg-white dark:bg-gray-800 rounded-lg shadow-lg
-                              border border-gray-100 dark:border-gray-700
-                              text-left touch-none"
-                          >
-                            <div className="space-y-1 text-xs">
-                              <div className="font-medium text-gray-900 dark:text-gray-100">
-                                {format(date, 'MMMM d, yyyy')}
-                              </div>
-                              <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                                Completed: {summary.completed}
-                              </div>
-                              {summary.overdue > 0 && (
-                                <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-                                  Overdue: {summary.overdue}
+                      {/* Tooltip - Show only on desktop */}
+                      {!isMobileRef.current && (
+                        <AnimatePresence>
+                          {hoveredDate && isSameDay(date, hoveredDate) && summary.total > 0 && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 10 }}
+                              className="absolute bottom-full mb-2 z-50 w-48 p-2
+                                bg-white dark:bg-gray-800 rounded-lg shadow-lg
+                                border border-gray-100 dark:border-gray-700
+                                text-left touch-none"
+                            >
+                              <div className="space-y-1 text-xs">
+                                <div className="font-medium text-gray-900 dark:text-gray-100">
+                                  {format(date, 'MMMM d, yyyy')}
                                 </div>
-                              )}
-                              {summary.inProgress > 0 && (
-                                <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                                  In Progress: {summary.inProgress}
+                                <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                                  Completed: {summary.completed}
                                 </div>
-                              )}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                                {summary.overdue > 0 && (
+                                  <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
+                                    Overdue: {summary.overdue}
+                                  </div>
+                                )}
+                                {summary.inProgress > 0 && (
+                                  <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                    In Progress: {summary.inProgress}
+                                  </div>
+                                )}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      )}
 
                       {/* Selected/Today Indicator Ring */}
                       {(isSameDay(date, selectedDate) || isToday(date)) && (
